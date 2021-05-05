@@ -1,0 +1,2 @@
+error1: your github oauth token invalid
+soluation1: re-install composer or change C:/Users/USER/AppData/Roaming/Composer/auth.json file as per google search
