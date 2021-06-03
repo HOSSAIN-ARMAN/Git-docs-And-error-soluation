@@ -1,0 +1,111 @@
+
+=================================================
+
+
+apt-get update
+apt-get upgrade
+apt-get install software-properties-common
+If there is no git, install git
+apt-get install nginx
+apt-get install mysql-server
+Create user for applications
+mysql --user=root mysql
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'new-pass';GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;FLUSH PRIVILEGES;
+ALTER USER 'admin'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PASSWORD';
+Exit
+sudo add-apt-repository ppa:ondrej/php (Only for ubuntu 20.04)
+apt-get install php7.2 php7.2-curl php7.2-mbstring php7.2-mysql php7.2-xml php7.2-cli php7.2-fpm php7.2-json php7.2-xsl php7.2-common php7.2-gd php7.2-zip
+ssh-keygen -t rsa  //(generate ssh key)
+cat .ssh/id_rsa.pub (to show the ssh key)
+white_check_mark
+eyes
+raised_hands
+
+
+
+
+
+11:36
+Import: “mysql -u username -p database_name < file.sql”
+Export: “mysqldump -u username -p database_name > file.sql”
+
+
+
+=============================================
+
+
+1. Install nginx from : https://ubuntu.com/tutorials/install-and-configure-nginx#1-overview
+2. Install php7.2 from: https://askubuntu.com/questions/1230869/cant-install-php-7-2-on-ubuntu-20-04
+3. Follow: https://dev.to/ivanbernatovic/the-best-way-to-set-up-lemp-stack-for-local-development-2021-edition-22lc
+
+a. sudo cp /etc/php/7.2/fpm/pool.d/www.conf /etc/php/7.2/fpm/pool.d/slssaqib.conf
+
+We need to make a few changes so open the newly copied file by running sudo nano /etc/php/7.2/fpm/pool.d/slssaqib.conf. We need to make the following changes:
+
+Change the [www] to [slssaqib] to change the pool name
+Change the line user = www-data to user = slssaqib
+Change the line group = www-data to group = slssaqib
+Change the listen = /run/php/php7.2-fpm.sock to listen = /run/php/php7.2-slssaqib-fpm.sock
+Now run sudo systemctl restart php7.2-fpm.service to load the new config and restart the main FPM process.
+
+sudo adduser slssaqib www-data
+
+
+
+5. Install phpmyadmin from: https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-nginx-on-an-ubuntu-18-04-server
+
+server {
+	listen 80;
+	listen [::]:70;
+
+	server_name phpmyadmin;
+
+	root /var/www/phpmyadmin/;
+	index index.html index.php;
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+		#try_files $uri $uri/ =404;
+	}
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+
+		# With php7.0-cgi alone:
+		#fastcgi_pass 127.0.0.1:9000;
+		# With php7.0-fpm:
+		fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+	}
+}
+
+6. phpmyadmin Login Issue:
+https://stackoverflow.com/questions/49948350/phpmyadmin-on-mysql-8-0
+
+sudo touch /etc/nginx/sites-available/mondol.conf
+7. Creating a server
+server {
+  listen 80;
+  listen [::]:8090;
+  root /home/slssaqib/projects/mondol/public;
+  index index.php index.html index.htm;
+  server_name mondol.test;
+  location / {
+		try_files $uri $uri/ /index.php?$query_string;
+		#try_files $uri $uri/ =404;
+	}
+
+    location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		# With php7.0-cgi alone:
+		#fastcgi_pass 127.0.0.1:9000;
+		# With php7.0-fpm:
+		fastcgi_pass unix:/run/php/php7.2-slssaqib-fpm.sock;
+	}
+
+}
+
+8. sudo ln -s /etc/nginx/sites-available/mondol.conf /etc/nginx/sites-enabled
+
+9. sudo systemctl reload nginx.service
+
+10. The final thing is to edit /etc/hosts file to let your operating system know you’re hosting my-awesome-app.test on your machine. Run sudo nano /etc/hosts and add the following line to the bottom of the file: 127.0.0.1 my-awesome-app.test
+
