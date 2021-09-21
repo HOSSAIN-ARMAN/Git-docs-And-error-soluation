@@ -1,1 +1,16 @@
 1)git config --system --unset credential.helper (if get access denied error ) this command run in window administration32 cmd
+
+
+2) git merge command 
+   [
+     first of all create branch like brach-one and branch-two now merge branch uing command
+     let's think you are in branch-one then write command
+     ->git add .
+     ->git commit -m " "
+     ->git push
+     ->git checkout branch-two
+     ->git pull
+     ->git pull origin brach-one
+     ->git push
+     ->git checkout branch-two
+   ]
