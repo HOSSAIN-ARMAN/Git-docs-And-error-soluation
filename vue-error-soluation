@@ -1,0 +1,5 @@
+1) [error => [webpack-cli] Error: Cannot find module 'vue/compiler-sfc' Require stack:
+
+npm add vue@next
+npm add @vue/compiler-sfc -D
+npm remove vue-template-compiler]
